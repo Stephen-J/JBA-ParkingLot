@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ParkingTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-01-30T23:30:07" hostname="DESKTOP-AAG2RLD" time="0.074">
+  <properties/>
+  <testcase name="start" classname="ParkingTest" time="0.074"/>
+  <system-out><![CDATA[?[1;31m
+Start test 1?[0m
+White car has parked.
+Yellow car left the parking lot.
+Green car just parked here.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
