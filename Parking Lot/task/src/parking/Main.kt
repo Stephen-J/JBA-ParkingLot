@@ -3,18 +3,17 @@ package parking
 class Car(val registration : String,val color : String)
 
 class ParkingLot(size : Int){
-    val spots = Array<Car?>(2) {
-        if (it == 0) {
-            Car("","")
-        } else {
-            null
-        }
-    }
+    val spots = Array<Car?>(size) {null}
 
     fun handlePark(car : Car) : String {
         val emptySpot = spots.indexOfFirst { it == null }
-        spots[emptySpot] = car
-        return "${car.color} car parked in spot ${emptySpot + 1}."
+        val result = if (emptySpot != -1) {
+            spots[emptySpot] = car
+            "${car.color} car parked in spot ${emptySpot + 1}."
+        } else {
+            "Sorry, the parking lot is full."
+        }
+        return result
     }
 
     fun handleLeave(spot : Int) : String {
@@ -26,22 +25,23 @@ class ParkingLot(size : Int){
         }
         return result
     }
-
-
 }
 
 fun main() {
-    val input = readLine()!!.split(" ")
-    val parkingLot = ParkingLot(2)
-    when (input[0]) {
-        "park" -> {
-            val registration = input[1]
-            val color = input[2]
-            println(parkingLot.handlePark(Car(registration,color)))
+    val parkingLot = ParkingLot(20)
+    var input = readLine()!!.split(" ")
+    while(input.first() != "exit"){
+        when (input[0]) {
+            "park" -> {
+                val registration = input[1]
+                val color = input[2]
+                println(parkingLot.handlePark(Car(registration,color)))
+            }
+            "leave" -> {
+                val lotNumber = input[1].toInt()
+                println(parkingLot.handleLeave(lotNumber))
+            }
         }
-        "leave" -> {
-            val lotNumber = input[1].toInt()
-            println(parkingLot.handleLeave(lotNumber))
-        }
+        input = readLine()!!.split(" ")
     }
 }
