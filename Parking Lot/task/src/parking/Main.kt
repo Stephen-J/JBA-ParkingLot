@@ -26,6 +26,39 @@ class ParkingLot(size : Int){
         }
     }
 
+    fun handleRegByColor(color: String) : String {
+        val result = spots.filter { it?.color.equals(color, ignoreCase = true) }
+        return if (result.isEmpty()) {
+            "No cars with color $color were found."
+        } else {
+            result.map {it?.registration}.joinToString(", ")
+        }
+    }
+
+    fun handleSpotByReg(registration: String) : String {
+        val results = mutableListOf<Int>()
+        spots.onEachIndexed{i,car ->
+            if (car?.registration.equals(registration, ignoreCase = true)) results.add(i + 1)
+        }
+        return if (results.isEmpty()) {
+            "No cars with registration number $registration were found."
+        } else {
+            results.joinToString(", ")
+        }
+    }
+
+    fun handleSpotByColor(color: String) : String {
+        val results = mutableListOf<Int>()
+        spots.onEachIndexed{i,car ->
+            if (car?.color.equals(color, ignoreCase = true)) results.add(i + 1)
+        }
+        return if (results.isEmpty()) {
+            "No cars with color $color were found."
+        } else {
+            results.joinToString(", ")
+        }
+    }
+
     fun handleStatus() : String {
         return if (isEmpty()) {
             val results = mutableListOf<String>()
@@ -74,11 +107,22 @@ fun main() {
                     println(parkingLot.handleLeave(lotNumber))
                 }
                 "status" -> println(parkingLot.handleStatus())
+                "reg_by_color" -> {
+                    val color = input[1]
+                    println(parkingLot.handleRegByColor(color))
+                }
+                "spot_by_reg" -> {
+                    val registration = input[1]
+                    println(parkingLot.handleSpotByReg(registration))
+                }
+                "spot_by_color" -> {
+                    val color = input[1]
+                    println(parkingLot.handleSpotByColor(color))
+                }
                 else -> println("Unknown Command")
             }
 
         }
-
         input = readLine()!!.split(" ")
     }
 }
