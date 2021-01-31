@@ -3,45 +3,82 @@ package parking
 class Car(val registration : String,val color : String)
 
 class ParkingLot(size : Int){
-    val spots = Array<Car?>(size) {null}
+    private val spots = Array<Car?>(size) {null}
 
-    fun handlePark(car : Car) : String {
+    private fun isEmpty() = spots.any{it != null}
+
+    fun handlePark(car: Car): String {
         val emptySpot = spots.indexOfFirst { it == null }
-        val result = if (emptySpot != -1) {
+        return if (emptySpot != -1) {
             spots[emptySpot] = car
             "${car.color} car parked in spot ${emptySpot + 1}."
         } else {
             "Sorry, the parking lot is full."
         }
-        return result
     }
 
-    fun handleLeave(spot : Int) : String {
-        val result = if (spots[spot - 1] != null) {
+    fun handleLeave(spot: Int): String {
+        return if (spots[spot - 1] != null) {
             spots[spot - 1] = null
             "Spot $spot is free."
         } else {
             "There is no car in spot $spot."
         }
-        return result
+    }
+
+    fun handleStatus() : String {
+        return if (isEmpty()) {
+            val results = mutableListOf<String>()
+            spots.mapIndexed { i,car ->
+                if (car != null) {
+                    results += "${i + 1} ${car.registration} ${car.color}"
+                }
+            }
+            results.joinToString("\n")
+        } else {
+            "Parking lot is empty."
+        }
+
     }
 }
 
 fun main() {
-    val parkingLot = ParkingLot(20)
+    var parkingLot : ParkingLot? = null
     var input = readLine()!!.split(" ")
     while(input.first() != "exit"){
-        when (input[0]) {
-            "park" -> {
-                val registration = input[1]
-                val color = input[2]
-                println(parkingLot.handlePark(Car(registration,color)))
+        if (parkingLot == null) {
+            when (input[0]) {
+                "create" -> {
+                    val size = input[1].toInt()
+                    parkingLot = ParkingLot(size)
+                    println("Created a parking lot with $size spots.")
+                }
+                else -> {
+                    println("Sorry, a parking lot has not been created.")
+                }
             }
-            "leave" -> {
-                val lotNumber = input[1].toInt()
-                println(parkingLot.handleLeave(lotNumber))
+        } else {
+            when (input[0]) {
+                "create" -> {
+                    val size = input[1].toInt()
+                    parkingLot = ParkingLot(size)
+                    println("Created a parking lot with $size spots.")
+                }
+                "park" -> {
+                    val registration = input[1]
+                    val color = input[2]
+                    println(parkingLot.handlePark(Car(registration,color)))
+                }
+                "leave" -> {
+                    val lotNumber = input[1].toInt()
+                    println(parkingLot.handleLeave(lotNumber))
+                }
+                "status" -> println(parkingLot.handleStatus())
+                else -> println("Unknown Command")
             }
+
         }
+
         input = readLine()!!.split(" ")
     }
 }
